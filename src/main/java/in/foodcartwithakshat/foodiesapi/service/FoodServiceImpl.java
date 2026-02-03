@@ -29,8 +29,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -154,6 +156,16 @@ public class FoodServiceImpl implements FoodService {
         newFoodEntity.setImageUrl(imageUrl);
         newFoodEntity = foodRepository.save(newFoodEntity);
         return convertToResponse(newFoodEntity);
+
+
+    }
+
+    @Override
+    public List<FoodResponse> readFoods() {
+        List<FoodEntity> foodEntities =  foodRepository.findAll();
+        // Use of JAVA-8 Stream API
+        return foodEntities.stream().map(object -> convertToResponse(object)).collect(Collectors.toList());
+
 
 
     }
