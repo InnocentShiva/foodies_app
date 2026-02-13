@@ -1,8 +1,12 @@
 import React from 'react';
+import axios from 'axios';
 import { assets } from '../../assets/assets';
 import { useState } from 'react';
+import { addFood } from '../../services/foodService';
+import { toast } from 'react-toastify';
 
 const AddFood = () => {
+
     const [image, setImage] = useState(false);
     const [data, setData] = useState({
         name: '',
@@ -10,6 +14,10 @@ const AddFood = () => {
         category: 'dosa',
         price: ''
     });
+        
+    
+    
+    
 
     const onChangeHandler = (event) => {
         const name = event.target.name;
@@ -21,20 +29,41 @@ const AddFood = () => {
         }));
     }
 
+    const onSubmitHandler = async (event) => {
+        event.preventDefault();
+        if (!image) {
+            toast.error('Please select an image');
+            return;
+        }
     
-
+        try {
+            await addFood(data, image); 
+            toast.success('Food added successfully.');
+            setData({
+                name: '',
+                description: '',
+                category: 'dosa',
+                price: ''
+            });
+            setImage(null);
+        } catch (error) {
+            toast.error('Failed to add food. Error: ' + error.message);
+        }
+    
+    
+    }
   return (
     <div className="mt-2">
     <div className="row">
         <div className="card col-md-8 col-lg-6">
             <div className="card-body">    
-                <form className="contact-form">
+                <form className="add-food-form" onSubmit={onSubmitHandler} >
                     <h3 className="text-center mb-4">Add Food</h3>
                     <div className="mb-3">
                         <label htmlFor="image"  className="form-label">
                             <img src={image ? URL.createObjectURL(image) : assets.upload} alt="upload Image" width={98}/>
                         </label>
-                        <input type="file" className="form-control" id="image" name="image" required hidden onChange={(event) => setImage(event.target.files[0])}/>
+                        <input type="file" className="form-control" id="image"  hidden onChange={(event) => setImage(event.target.files[0])}/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Name</label>

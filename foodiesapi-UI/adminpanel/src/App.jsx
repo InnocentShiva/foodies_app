@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Sidebar from './components/sidebar/Sidebar'
-import Menubar from './components/menubar/Menubar'
-import AddFood from './pages/AddFood/AddFood'
-import ListFood from './pages/ListFood/ListFood'
-import Orders from './pages/Orders/Orders'
+import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Sidebar from './components/sidebar/Sidebar';
+import Menubar from './components/menubar/Menubar';
+import AddFood from './pages/AddFood/AddFood';
+import ListFood from './pages/ListFood/ListFood';
+import Orders from './pages/Orders/Orders';
+ import { ToastContainer} from 'react-toastify';
 
 const App = () => {
   const  [sidebarVisible, setSidebarVisible] = useState(true);
@@ -21,6 +22,7 @@ const App = () => {
             <div id="page-content-wrapper">
                 
                 <Menubar toggleSidebar={toggleSidebar}/>
+                <ToastContainer />
                 
                 <div className="container-fluid">
                     <Routes>
