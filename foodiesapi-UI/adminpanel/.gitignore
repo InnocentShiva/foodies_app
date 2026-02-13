@@ -1,0 +1,143 @@
+########################################################
+# =============== MAVEN BACKEND ========================
+########################################################
+
+# Maven build output
+/target/
+/**/target/
+
+# Compiled class files
+*.class
+
+# Packaged artifacts
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# Spring Boot logs
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+
+# Dependency reduced POM
+dependency-reduced-pom.xml
+
+
+########################################################
+# =============== FRONTEND (VITE + REACT) ==============
+########################################################
+
+# Node dependencies
+/frontend/node_modules/
+/**/node_modules/
+
+# Vite build output
+/frontend/dist/
+/**/dist/
+
+# Vite cache
+/frontend/.vite/
+/**/.vite/
+
+# Coverage
+/frontend/coverage/
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Environment files (DO NOT COMMIT SECRETS)
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.production.local
+
+
+########################################################
+# =============== IDE FILES =============================
+########################################################
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Eclipse (if ever opened)
+.project
+.classpath
+.settings/
+
+
+########################################################
+# =============== OS FILES ==============================
+########################################################
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+
+########################################################
+# =============== TEST / REPORT FILES ===================
+########################################################
+
+/test-output/
+/reports/
+/surefire-reports/
+
+
+########################################################
+# =============== OPTIONAL ==============================
+########################################################
+
+# Docker
+*.pid
+
+# Local npm logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+##################################################################################
+########################################### CUSTOM IGNORES ##############################
+# Logs
+logs
+*.log
+
+yarn-error.log*
+
+
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+### Optional npm cache directory
+.npm
+
+
+##################################################################################
+################################### END OF .gitignore ##############################
+##################################################################################
