@@ -63,10 +63,6 @@ public class FoodServiceImpl implements FoodService {
 
         String key = generateKey(file);
 
-        String filenameExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
-        String keyForURL = UUID.randomUUID().toString()+"."+filenameExtension;
-
-
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -97,7 +93,7 @@ public class FoodServiceImpl implements FoodService {
             // IMPORTANT: return object key, NOT public URL
 //            return key;
 
-            return generatePresignedUrl(key);
+            return key;
 
 //            return "https://"+bucketName+".s3.amazonaws.com/"+keyForURL;
 
@@ -150,7 +146,7 @@ public class FoodServiceImpl implements FoodService {
     public FoodResponse addFood(FoodRequest request, MultipartFile file) {
         FoodEntity newFoodEntity = convertToEntity(request);
         String imageUrl = uploadFile(file);
-        newFoodEntity.setImageUrl(imageUrl);
+        newFoodEntity.setImageUrl(imageUrl); //=== Setting Key of the image Inside the image url object
         newFoodEntity = foodRepository.save(newFoodEntity);
         return convertToResponse(newFoodEntity);
 
@@ -160,12 +156,34 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<FoodResponse> readFoods() {
         List<FoodEntity> foodEntities =  foodRepository.findAll();
+
+        List<FoodEntity> UpdatedFoodEntitiesWithSignedUrls = readFoodsandUpdateWithSignedImageUrl(foodEntities);
+
         // Use of JAVA-8 Stream API
-        return foodEntities.stream().map(object -> convertToResponse(object)).collect(Collectors.toList());
-
-
+        return UpdatedFoodEntitiesWithSignedUrls.stream().map(object -> convertToResponse(object)).collect(Collectors.toList());
 
     }
+
+
+    public List<FoodEntity> readFoodsandUpdateWithSignedImageUrl(List<FoodEntity> entities) {
+
+        return entities.stream().map(food -> new FoodEntity(
+                food.getId(),
+                food.getName(),
+                food.getDescription(),
+                food.getPrice(),
+                food.getCategory(),
+                generatePresignedUrl(food.getImageUrl())
+        )).toList();
+    }
+
+
+    public String getPresignedUrl(String imageUrls) {
+
+        return "";
+    }
+
+
 
     @Override
     public FoodResponse readFood(String id) {
@@ -258,7 +276,13 @@ public class FoodServiceImpl implements FoodService {
                 + extension;
     }
     public String generatePresignedUrl(String objectKey) {
+        /*Added if condition for legacy image uploads. Importance of this code is only until all images older then 16-feb-2026 are not removed.*/
+        if(objectKey.contains("https")){
+            objectKey = objectKey.replace(objectKey.substring(objectKey.lastIndexOf('?')+1),"");
+            objectKey = objectKey.replace("?","");
+            objectKey = objectKey.replace("https://foodies-foods-akkie.s3.ap-south-1.amazonaws.com/","");
 
+        }
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
@@ -266,13 +290,15 @@ public class FoodServiceImpl implements FoodService {
 
         GetObjectPresignRequest presignRequest =
                 GetObjectPresignRequest.builder()
-                        .signatureDuration(Duration.ofMinutes(15)) // expiry
+                        .signatureDuration(Duration.ofMinutes(2)) // expiry
                         .getObjectRequest(getObjectRequest)
                         .build();
 
         PresignedGetObjectRequest presignedRequest =
                 s3Presigner.presignGetObject(presignRequest);
-
+        logger.info("KeyURL : {}",objectKey);
+        logger.info("PresignedGetObjectRequest : {}", presignedRequest);
+        logger.info("Url returning : {}", presignedRequest.url().toString());
         return presignedRequest.url().toString();
     }
 
