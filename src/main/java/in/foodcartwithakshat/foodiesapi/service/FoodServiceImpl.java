@@ -159,6 +159,7 @@ public class FoodServiceImpl implements FoodService {
 
         List<FoodEntity> UpdatedFoodEntitiesWithSignedUrls = readFoodsandUpdateWithSignedImageUrl(foodEntities);
 
+
         // Use of JAVA-8 Stream API
         return UpdatedFoodEntitiesWithSignedUrls.stream().map(object -> convertToResponse(object)).collect(Collectors.toList());
 
@@ -177,6 +178,17 @@ public class FoodServiceImpl implements FoodService {
         )).toList();
     }
 
+    public FoodEntity readFoodAndUpdateWithSignedImageUrl(FoodEntity entity) {
+        return new FoodEntity(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getPrice(),
+                entity.getCategory(),
+                generatePresignedUrl(entity.getImageUrl())
+        );
+    }
+
 
     public String getPresignedUrl(String imageUrls) {
 
@@ -188,7 +200,8 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public FoodResponse readFood(String id) {
        FoodEntity foodEntity =  foodRepository.findById(id).orElseThrow(() -> new RuntimeException("Food id not found for the id : "+id));
-       return convertToResponse(foodEntity);
+
+       return convertToResponse(readFoodAndUpdateWithSignedImageUrl(foodEntity));
     }
 
     @Override
@@ -210,7 +223,7 @@ public class FoodServiceImpl implements FoodService {
         String imageUrl = foodResponse.getImageUrl();
         String signedFilename = imageUrl.substring(imageUrl.lastIndexOf("/uploads")+1);
         String unsignedFilename = signedFilename.substring(0,signedFilename.lastIndexOf("?"));
-        logger.info("Filename is : {}", unsignedFilename);
+//        logger.info("Filename is : {}", unsignedFilename);
         boolean isFileDeleted = deleteFile(unsignedFilename);
         if(isFileDeleted) {
             foodRepository.deleteById(foodResponse.getId());
@@ -296,9 +309,9 @@ public class FoodServiceImpl implements FoodService {
 
         PresignedGetObjectRequest presignedRequest =
                 s3Presigner.presignGetObject(presignRequest);
-        logger.info("KeyURL : {}",objectKey);
-        logger.info("PresignedGetObjectRequest : {}", presignedRequest);
-        logger.info("Url returning : {}", presignedRequest.url().toString());
+//        logger.info("KeyURL : {}",objectKey);
+//        logger.info("PresignedGetObjectRequest : {}", presignedRequest);
+//        logger.info("Url returning : {}", presignedRequest.url().toString());
         return presignedRequest.url().toString();
     }
 
