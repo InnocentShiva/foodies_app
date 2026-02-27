@@ -15,15 +15,15 @@ export const assets = {
 
 export const categories = [
     {
-        category: 'Biriyani',
+        category: 'Veg Biriyani',
         icon: paneer_biriyani
     },
     {
-        category: 'South Indian',
+        category: 'dosa',
         icon: benne_dosa
     },
     {
-        category: 'Desserts',
+        category: 'Dessert',
         icon: desserts
     },
     {
@@ -39,7 +39,7 @@ export const categories = [
         icon: salad
     },
     {
-        category: 'Kolkata roll',
+        category: 'Roll',
         icon: veg_roll
     }
 ]
