@@ -28,7 +28,7 @@ const FoodItem = ({name, description, id, imageUrl, price}) => {
                 </div>
             </div>
             <div className="card-footer d-flex justify-content-between bg-light">
-                <Link className="btn btn-primary btn-sm" to={`food/${id}`}>View Food</Link>
+                <Link className="btn btn-primary btn-sm" to={`/food/${id}`}>View Food</Link>
                {quantities[id] > 0 ? (
                 <div className="d-flex align-items-center gap-2">
                     <button className="btn btn-danger btn-sm" onClick={() => decreaseQuantity(id)}><i className="bi bi-dash-circle"></i></button>
