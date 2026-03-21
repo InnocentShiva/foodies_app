@@ -5,6 +5,8 @@ import in.foodcartwithakshat.foodiesapi.io.UserRegistrationRequest;
 import in.foodcartwithakshat.foodiesapi.io.UserRegistrationResponse;
 import in.foodcartwithakshat.foodiesapi.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationFacade authenticationFacade;
 
     @Override
     public UserRegistrationResponse registerUser(UserRegistrationRequest request) {
@@ -21,6 +24,13 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
         newUser = userRepository.save(newUser);
         return convertToResponse(newUser);
+    }
+
+    @Override
+    public String findByUserId() {
+        String loggedInUserEmail = authenticationFacade.getAuthentication().getName();
+        UserEntity loggedInUser = userRepository.findByEmail(loggedInUserEmail).orElseThrow(() -> new UsernameNotFoundException("No user with this email exists"));
+        return loggedInUser.getId();
     }
 
     private UserEntity convertToEntity(UserRegistrationRequest request){

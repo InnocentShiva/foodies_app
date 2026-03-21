@@ -7,5 +7,5 @@ public interface UserRegistrationService {
 
     UserRegistrationResponse registerUser(UserRegistrationRequest request);
 
-
+    String findByUserId();
 }
