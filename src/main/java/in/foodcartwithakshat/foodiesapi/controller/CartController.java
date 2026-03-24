@@ -6,7 +6,6 @@ import in.foodcartwithakshat.foodiesapi.io.CartResponse;
 import in.foodcartwithakshat.foodiesapi.service.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 

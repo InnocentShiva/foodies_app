@@ -7,9 +7,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Menubar = () => {
   const [active,setActive]=  useState('home');
-  const { quantities } = useContext(StoreContext);
+  const { quantities, token, setToken } = useContext(StoreContext);
   const uniqueItemsInCart = Object.values(quantities).filter(qty => qty > 0).length;
   const navigate = useNavigate();
+
+  const Logout = () => {
+    localStorage.removeItem('token');
+    setToken("");
+    navigate('/');
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
   <div className="container">
@@ -38,8 +44,25 @@ const Menubar = () => {
             </span>
           </div>
         </Link>
-        <button className="btn btn-outline-primary" onClick={()=> navigate('/login')}>Login</button>
-        <button className="btn btn-outline-success" onClick={()=> navigate('/register')}>Register</button>
+        {
+          !token ? 
+          <>
+          <button className="btn btn-outline-primary" onClick={()=> navigate('/login')}>Login</button>
+          <button className="btn btn-outline-success" onClick={()=> navigate('/register')}>Register</button>
+          </> : <div className="dropdown text-end">
+               < a href="#" 
+                    className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                  <img src= {assets.profile} alt="" width={32} heignt={32} className="rounded-circle" /> 
+                </a>
+                <ul className="dropdown-menu text-small" style={{}}>
+                  <li className="dropdown-item" onClick={() => navigate('/myorders')}>Orders </li>
+                  <li className="dropdown-item" onClick={Logout}>Logout</li>
+
+                </ul>
+              </div>
+        }
       </div>
     </div>
   </div>
